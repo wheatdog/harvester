@@ -104,14 +104,14 @@ RUN mkdir -p /dist/prepare-addon
 RUN git clone --branch ${ADDONS_BRANCH} --single-branch --depth 1 \
     https://github.com/harvester/addons.git /dist/prepare-addons/addons && \
     rm -rf /dist/prepare-addons/addons/.git
-    
+
 # generate addon manifests
-RUN mkdir -p /dist/prepare-addons/addons-manifests && \ 
+RUN mkdir -p /dist/prepare-addons/addons-manifests && \
     cd /dist/prepare-addons/addons && \
     go run . -generateAddons -path /dist/prepare-addons/addons-manifests
 
 # genereate addon templates (for rancherd)
-RUN mkdir -p /dist/prepare-addons/addons-templates && \ 
+RUN mkdir -p /dist/prepare-addons/addons-templates && \
     cd /dist/prepare-addons/addons && \
     go run . -generateTemplates -path /dist/prepare-addons/addons-templates
 
@@ -240,6 +240,7 @@ FROM builder AS build-iso
 
 WORKDIR /go/src/github.com/harvester/harvester
 
+COPY ./rancherd/bin/rancherd-${ARCH} package/harvester-os/files/usr/bin/rancherd
 COPY --from=build-installer /go/src/github.com/harvester/harvester/bin/harvester-installer package/harvester-os/files/usr/bin/
 COPY --from=prepare-addons /dist/prepare-addons/addons/ /go/src/github.com/harvester/addons/
 COPY --from=prepare-harvester-charts /go/src/github.com/harvester/harvester/deploy/charts/ /go/src/github.com/harvester/harvester/deploy/charts/

@@ -162,6 +162,12 @@ build-installer: prepare-addons | $(ROOT)/bin
 	    --output type=local,dest=$(ROOT)
 
 
+# ---- Compile rancherd binary ----
+build-rancherd: $(ROOT)/bin
+	$(BANNER)
+	cd ./rancherd && make build
+
+
 # ---- Validate image list consistency ----
 check-images: prepare-addons gen-version-env
 	$(BANNER)
@@ -209,7 +215,7 @@ prepare-addons:
 
 
 # ---- Build ISO ----
-build-iso: gen-version-env build-installer check-images
+build-iso: gen-version-env build-installer check-images build-rancherd
 	$(BANNER)
 	$(DOCKER_BUILD) --target build-iso \
 	    --build-arg ADDONS_BRANCH=$(HARVESTER_ADDONS_VERSION) \
