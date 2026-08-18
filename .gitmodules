@@ -1,0 +1,3 @@
+[submodule "rancherd"]
+	path = rancherd
+	url = git@github.com:wheatdog/rancherd.git
