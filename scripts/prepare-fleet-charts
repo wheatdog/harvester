@@ -1,0 +1,22 @@
+#!/bin/bash
+set -eu
+
+TOP_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )"
+SCRIPTS_DIR="${TOP_DIR}/scripts"
+DIST_CHARTS_DIR="/dist/charts"
+
+cd ${TOP_DIR}
+
+source ${SCRIPTS_DIR}/version-fleet
+
+echo "Fleet chart version: ${FLEET_CHART_VERSION}"
+
+mkdir -p ${DIST_CHARTS_DIR}
+
+# Prepare fleet-crd & fleet charts
+helm pull https://charts.rancher.io/assets/fleet-crd/fleet-crd-${FLEET_CHART_VERSION}.tgz -d ${DIST_CHARTS_DIR}
+helm pull https://charts.rancher.io/assets/fleet/fleet-${FLEET_CHART_VERSION}.tgz -d ${DIST_CHARTS_DIR}
+
+# make chart sanity check
+tar zxvf ${DIST_CHARTS_DIR}/fleet-crd-${FLEET_CHART_VERSION}.tgz >/dev/null --warning=no-timestamp
+tar zxvf ${DIST_CHARTS_DIR}/fleet-${FLEET_CHART_VERSION}.tgz >/dev/null --warning=no-timestamp

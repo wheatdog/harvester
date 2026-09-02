@@ -344,6 +344,8 @@ type HarvesterConfig struct {
 	Install                     `json:"install,omitempty"`
 	RuntimeVersion              string            `json:"runtimeVersion,omitempty"`
 	RancherVersion              string            `json:"rancherVersion,omitempty"`
+	FleetVersion                string            `json:"fleetVersion,omitempty"`
+	FleetChartVersion           string            `json:"fleetChartVersion,omitempty"`
 	HarvesterChartVersion       string            `json:"harvesterChartVersion,omitempty"`
 	MonitoringChartVersion      string            `json:"monitoringChartVersion,omitempty"`
 	SystemSettings              map[string]string `json:"systemSettings,omitempty"`

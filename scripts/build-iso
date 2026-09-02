@@ -11,7 +11,7 @@ source "${SCRIPTS_DIR}/lib/addon"
 source "${SCRIPTS_DIR}/lib/harvester-image-list"
 
 source ${SCRIPTS_DIR}/version
-source ${SCRIPTS_DIR}/version-rancher
+source ${SCRIPTS_DIR}/version-fleet
 source ${SCRIPTS_DIR}/version-rke2
 
 RKE2_VERSION_NORMALIZED=$(echo "${RKE2_VERSION}" | tr '+' '-')
@@ -31,7 +31,7 @@ prepare_rancherd_bundle() {
     local list_file="${BUNDLE_DIR}/rancherd/images/rancherd-bootstrap-images-${VERSION}.txt"
     local archive="${BUNDLE_DIR}/rancherd/images/rancherd-bootstrap-images-${VERSION}.tar.zst"
 
-    sed "s,\$RKE2_VERSION,${RKE2_VERSION_NORMALIZED},g; s,\$RANCHER_VERSION,${RANCHER_VERSION},g" \
+    sed "s,\$RKE2_VERSION,${RKE2_VERSION_NORMALIZED},g" \
         "${SCRIPTS_DIR}/images/rancherd-bootstrap-images.txt" > "${list_file}"
 
     local key
@@ -41,16 +41,17 @@ prepare_rancherd_bundle() {
     add_image_list_to_metadata "agent" "${BUNDLE_DIR}" "${list_file}" "${archive}"
 }
 
-prepare_rancher_bundle() {
-    echo "Preparing Rancher images..."
-    local list_file="${BUNDLE_DIR}/harvester/images-lists/rancher-images-${RANCHER_VERSION}.txt"
-    local archive="${BUNDLE_DIR}/harvester/images/rancher-images-${RANCHER_VERSION}.tar.zst"
+prepare_fleet_bundle() {
+    echo "Preparing fleet images..."
+    local list_file="${BUNDLE_DIR}/harvester/images/fleet-images-${VERSION}.txt"
+    local archive="${BUNDLE_DIR}/harvester/images/fleet-images-${VERSION}.tar.zst"
 
-    cp "${SCRIPTS_DIR}/images/rancher-images.txt" "${list_file}"
+    sed "s,\$FLEET_VERSION,${FLEET_VERSION},g" \
+        "${SCRIPTS_DIR}/images/fleet-images.txt" > "${list_file}"
 
     local key
     key=$(cache_hash "${list_file}")
-    cache_pull_and_save "rancher" "${key}" "${list_file}" "${archive}"
+    cache_pull_and_save "fleet" "${key}" "${list_file}" "${archive}"
 
     add_image_list_to_metadata "common" "${BUNDLE_DIR}" "${list_file}" "${archive}"
 }
@@ -190,7 +191,7 @@ mkdir -p "${BUNDLE_DIR}/rancherd/images"
 mkdir -p "${BUNDLE_DIR}/harvester/images" "${BUNDLE_DIR}/harvester/images-lists"
 
 prepare_rancherd_bundle
-prepare_rancher_bundle
+prepare_fleet_bundle
 prepare_rke2_bundle
 prepare_harvester_bundle
 prepare_extra_bundle

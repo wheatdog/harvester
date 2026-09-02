@@ -226,6 +226,14 @@ COPY scripts/version scripts/.version_env scripts/
 RUN bash scripts/prepare-harvester-charts
 
 
+# ---- prepare-fleet-charts ----
+FROM bundle-builder AS prepare-fleet-charts
+
+COPY scripts/prepare-fleet-charts scripts/prepare-fleet-charts
+COPY scripts/version-fleet scripts/version-fleet
+RUN bash scripts/prepare-fleet-charts
+
+
 # ---- check-images ----
 FROM bundle-builder AS check-images
 
@@ -246,6 +254,7 @@ COPY --from=prepare-addons /dist/prepare-addons/addons/ /go/src/github.com/harve
 COPY --from=prepare-harvester-charts /go/src/github.com/harvester/harvester/deploy/charts/ /go/src/github.com/harvester/harvester/deploy/charts/
 COPY --from=prepare-harvester-charts /dist/chart-tarballs/* /go/src/github.com/harvester/harvester/package/harvester-repo/charts/
 COPY --from=prepare-addons-charts /dist/charts/*.tgz /go/src/github.com/harvester/harvester/package/harvester-repo/charts/
+COPY --from=prepare-fleet-charts /dist/charts/*.tgz /go/src/github.com/harvester/harvester/package/harvester-repo/charts/
 
 COPY scripts/ scripts/
 COPY package/upgrade-matrix.yaml package/upgrade-matrix.yaml
