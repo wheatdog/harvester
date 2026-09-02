@@ -1,4 +1,12 @@
 resources:
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: cattle-fleet-system
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: cattle-system
 - apiVersion: apps/v1
   kind: Deployment
   metadata:
@@ -37,9 +45,25 @@ resources:
       - protocol: TCP
         port: 80
         targetPort: 80
-- apiVersion: catalog.cattle.io/v1
-  kind: ClusterRepo
+- apiVersion: helm.cattle.io/v1
+  kind: HelmChart
   metadata:
-    name: harvester-charts
+    name: fleet-crd
+    namespace: cattle-fleet-system
   spec:
-    url: http://harvester-cluster-repo.cattle-system/charts
+    chart: fleet-crd
+    version: $FLEET_CHART_VERSION
+    createNamespace: true
+    targetNamespace: cattle-fleet-system
+    repo: http://harvester-cluster-repo.cattle-system.svc/charts
+- apiVersion: helm.cattle.io/v1
+  kind: HelmChart
+  metadata:
+    name: fleet
+    namespace: cattle-fleet-system
+  spec:
+    chart: fleet
+    version: $FLEET_CHART_VERSION
+    createNamespace: true
+    targetNamespace: cattle-fleet-system
+    repo: http://harvester-cluster-repo.cattle-system.svc/charts

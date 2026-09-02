@@ -12,6 +12,7 @@ IMAGES_LISTS_DIR="${BUNDLE_DIR}/harvester/images-lists"
 mkdir -p ${IMAGES_DIR}
 mkdir -p ${IMAGES_LISTS_DIR}
 source ${SCRIPTS_DIR}/version
+source ${SCRIPTS_DIR}/version-fleet
 source ${SCRIPTS_DIR}/lib/image
 
 # for image publish in CI
@@ -35,6 +36,6 @@ zstd --rm $repo_image_archive -o "${repo_image_archive}.zst"
 add_image_list_to_metadata "common" $BUNDLE_DIR $repo_image_list_file "${repo_image_archive}.zst"
 
 # Update image name in Rancherd bootstrap resources
-sed "s,\$CLUSTER_REPO_IMAGE,${CLUSTER_REPO_IMAGE}," \
+sed "s,\$CLUSTER_REPO_IMAGE,${CLUSTER_REPO_IMAGE},g; s,\$FLEET_CHART_VERSION,${FLEET_CHART_VERSION},g" \
   ${PACKAGE_HARVESTER_OS_DIR}/templates/91-harvester-bootstrap-repo.yaml > \
   ${PACKAGE_HARVESTER_OS_DIR}/files/usr/share/rancher/rancherd/config.yaml.d/91-harvester-bootstrap-repo.yaml
