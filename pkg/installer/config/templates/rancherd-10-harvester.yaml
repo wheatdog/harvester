@@ -55,6 +55,23 @@ resources:
     namespace: cattle-fleet-system
     name: harvester-fleet-config
   data:
+    system-upgrade-controller-fleet.yaml: |
+      defaultNamespace: cattle-system
+      helm:
+        repo: http://harvester-cluster-repo.cattle-system.svc/charts
+        version: {{ .SystemUpgradeControllerChartVersion }}
+        chart: system-upgrade-controller
+        releaseName: system-upgrade-controller
+        takeOwnership: true
+        timeoutSeconds: 600
+        maxHistory: 10
+        values:
+          global:
+            cattle:
+              psp:
+                enabled: false
+      targets:
+      - clusterName: local
     harvester-crd-fleet.yaml: |
       defaultNamespace: harvester-system
       helm:
@@ -241,6 +258,34 @@ resources:
         maxHistory: 10
       targets:
       - clusterName: local
+- apiVersion: batch/v1
+  kind: Job
+  metadata:
+    name: system-upgrade-controller-fleet
+    namespace: cattle-fleet-system
+  spec:
+    template:
+      spec:
+        containers:
+        - name: system-upgrade-controller-fleet
+          image: rancher/fleet:{{ .FleetVersion }}
+          command: ["fleet"]
+          args:
+          - "apply"
+          - "system-upgrade-controller"
+          - "/app"
+          volumeMounts:
+          - name: config-volume
+            mountPath: "/app/fleet.yaml"
+            subPath: system-upgrade-controller-fleet.yaml
+            readOnly: false
+        restartPolicy: Never
+        volumes:
+        - name: config-volume
+          configMap:
+            name: harvester-fleet-config
+        serviceAccount: fleet-controller
+        serviceAccountName: fleet-controller
 - apiVersion: batch/v1
   kind: Job
   metadata:

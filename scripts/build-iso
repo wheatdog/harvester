@@ -12,6 +12,7 @@ source "${SCRIPTS_DIR}/lib/harvester-image-list"
 
 source ${SCRIPTS_DIR}/version
 source ${SCRIPTS_DIR}/version-fleet
+source ${SCRIPTS_DIR}/version-suc
 source ${SCRIPTS_DIR}/version-rke2
 
 RKE2_VERSION_NORMALIZED=$(echo "${RKE2_VERSION}" | tr '+' '-')
@@ -52,6 +53,21 @@ prepare_fleet_bundle() {
     local key
     key=$(cache_hash "${list_file}")
     cache_pull_and_save "fleet" "${key}" "${list_file}" "${archive}"
+
+    add_image_list_to_metadata "common" "${BUNDLE_DIR}" "${list_file}" "${archive}"
+}
+
+prepare_suc_bundle() {
+    echo "Preparing SUC images..."
+    local list_file="${BUNDLE_DIR}/harvester/images-lists/suc-images-${VERSION}.txt"
+    local archive="${BUNDLE_DIR}/harvester/images/suc-images-${VERSION}.tar.zst"
+
+    sed "s,\$SYSTEM_UPGRADE_CONTROLLER_VERSION,${SYSTEM_UPGRADE_CONTROLLER_VERSION},g" \
+        "${SCRIPTS_DIR}/images/suc-images.txt" > "${list_file}"
+
+    local key
+    key=$(cache_hash "${list_file}")
+    cache_pull_and_save "suc" "${key}" "${list_file}" "${archive}"
 
     add_image_list_to_metadata "common" "${BUNDLE_DIR}" "${list_file}" "${archive}"
 }
@@ -192,6 +208,7 @@ mkdir -p "${BUNDLE_DIR}/harvester/images" "${BUNDLE_DIR}/harvester/images-lists"
 
 prepare_rancherd_bundle
 prepare_fleet_bundle
+prepare_suc_bundle
 prepare_rke2_bundle
 prepare_harvester_bundle
 prepare_extra_bundle

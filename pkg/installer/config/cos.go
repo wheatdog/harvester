@@ -51,15 +51,16 @@ const (
 
 var (
 	// Following variables are replaced by ldflags
-	RKE2Version                   = ""
-	RancherVersion                = ""
-	FleetVersion                  = ""
-	HarvesterChartVersion         = ""
-	MonitoringChartVersion        = ""
-	LoggingChartVersion           = ""
-	KubeovnOperatorChartVersion   = ""
-	originalNetworkConfigs        = make(map[string][]byte)
-	saveOriginalNetworkConfigOnce sync.Once
+	RKE2Version                         = ""
+	RancherVersion                      = ""
+	FleetVersion                        = ""
+	HarvesterChartVersion               = ""
+	MonitoringChartVersion              = ""
+	LoggingChartVersion                 = ""
+	KubeovnOperatorChartVersion         = ""
+	SystemUpgradeControllerChartVersion = ""
+	originalNetworkConfigs              = make(map[string][]byte)
+	saveOriginalNetworkConfigOnce       sync.Once
 )
 
 // refer: https://github.com/rancher/elemental-cli/blob/v0.1.0/config.yaml.example
@@ -337,6 +338,10 @@ func setConfigDefaultValues(config *HarvesterConfig) {
 
 	if config.KubeovnOperatorChartVersion == "" {
 		config.KubeovnOperatorChartVersion = KubeovnOperatorChartVersion
+	}
+
+	if config.SystemUpgradeControllerChartVersion == "" {
+		config.SystemUpgradeControllerChartVersion = SystemUpgradeControllerChartVersion
 	}
 
 	// 0 is invalid and skipped from yaml to strut, no need to check

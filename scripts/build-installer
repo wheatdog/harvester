@@ -16,6 +16,7 @@ echo "HARVESTER_EVENTROUTER_FULL_TAG: $HARVESTER_EVENTROUTER_FULL_TAG"
 
 source ${SCRIPTS_DIR}/version
 source ${SCRIPTS_DIR}/version-fleet
+source ${SCRIPTS_DIR}/version-suc
 source ${SCRIPTS_DIR}/version-rke2
 
 echo "Installer version: ${VERSION}"
@@ -25,6 +26,7 @@ echo "Fleet version: ${FLEET_VERSION}"
 echo "Rancher monitoring version: ${MONITORING_VERSION}"
 echo "Rancher logging version: ${LOGGING_VERSION}"
 echo "Kubeovn operator version: ${KUBEOVN_OPERATOR_CHART_VERSION}"
+echo "SUC chart version: ${SYSTEM_UPGRADE_CONTROLLER_CHART_VERSION}"
 echo "The ARCH is: ${ARCH}"
 
 mkdir -p bin
@@ -34,6 +36,7 @@ LINKFLAGS="-X github.com/harvester/harvester/pkg/installer/config.RKE2Version=$R
            -X github.com/harvester/harvester/pkg/installer/version.Version=$VERSION
            -X github.com/harvester/harvester/pkg/installer/version.GitCommit=$COMMIT
            -X github.com/harvester/harvester/pkg/installer/version.HarvesterVersion=$VERSION
+           -X github.com/harvester/harvester/pkg/installer/config.SystemUpgradeControllerChartVersion=$SYSTEM_UPGRADE_CONTROLLER_CHART_VERSION
            -X github.com/harvester/harvester/pkg/installer/config.HarvesterChartVersion=$CHART_VERSION
            -X github.com/harvester/harvester/pkg/installer/config.MonitoringChartVersion=$MONITORING_VERSION
            -X github.com/harvester/harvester/pkg/installer/config.LoggingChartVersion=$LOGGING_VERSION

@@ -1,0 +1,1 @@
+docker.io/rancher/system-upgrade-controller:$SYSTEM_UPGRADE_CONTROLLER_VERSION

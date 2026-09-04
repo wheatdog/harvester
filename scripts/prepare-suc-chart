@@ -1,0 +1,20 @@
+#!/bin/bash
+set -eu
+
+TOP_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )"
+SCRIPTS_DIR="${TOP_DIR}/scripts"
+DIST_CHARTS_DIR="/dist/charts"
+
+cd ${TOP_DIR}
+
+source ${SCRIPTS_DIR}/version-suc
+
+echo "SUC chart version: ${SYSTEM_UPGRADE_CONTROLLER_CHART_VERSION}"
+
+mkdir -p ${DIST_CHARTS_DIR}
+
+# Prepare suc charts
+helm pull https://charts.rancher.io/assets/system-upgrade-controller/system-upgrade-controller-${SYSTEM_UPGRADE_CONTROLLER_CHART_VERSION}.tgz -d ${DIST_CHARTS_DIR}
+
+# make chart sanity check
+tar zxvf ${DIST_CHARTS_DIR}/system-upgrade-controller-${SYSTEM_UPGRADE_CONTROLLER_CHART_VERSION}.tgz >/dev/null --warning=no-timestamp
