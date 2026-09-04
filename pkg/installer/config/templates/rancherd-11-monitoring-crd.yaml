@@ -1,20 +1,29 @@
-resources: []
-# - apiVersion: management.cattle.io/v3
-#   kind: ManagedChart
-#   metadata:
-#     name: rancher-monitoring-crd
-#     namespace: fleet-local
-#   spec:
-#     chart: rancher-monitoring-crd
-#     releaseName: rancher-monitoring-crd
-#     version: {{ .MonitoringChartVersion }}
-#     defaultNamespace: cattle-monitoring-system
-#     repoName: harvester-charts
-#     timeoutSeconds: 600
-#     maxHistory: 10
-#     targets:
-#     - clusterName: local
-#       clusterSelector:
-#         matchExpressions:
-#         - key: provisioning.cattle.io/unmanaged-system-agent
-#           operator: DoesNotExist
+resources:
+- apiVersion: batch/v1
+  kind: Job
+  metadata:
+    name: rancher-monitoring-crd-fleet
+    namespace: cattle-fleet-system
+  spec:
+    template:
+      spec:
+        containers:
+        - name: rancher-monitoring-crd-fleet
+          image: rancher/fleet:{{ .FleetVersion }}
+          command: ["fleet"]
+          args:
+          - "apply"
+          - "rancher-monitoring-crd"
+          - "/app"
+          volumeMounts:
+          - name: config-volume
+            mountPath: "/app/fleet.yaml"
+            subPath: rancher-monitoring-crd-fleet.yaml
+            readOnly: false
+        restartPolicy: Never
+        volumes:
+        - name: config-volume
+          configMap:
+            name: harvester-fleet-config
+        serviceAccount: fleet-controller
+        serviceAccountName: fleet-controller
