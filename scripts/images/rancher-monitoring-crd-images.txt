@@ -1,0 +1,1 @@
+docker.io/rancher/kuberlr-kubectl:v7.1.1
