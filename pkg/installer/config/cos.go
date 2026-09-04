@@ -53,6 +53,7 @@ var (
 	// Following variables are replaced by ldflags
 	RKE2Version                   = ""
 	RancherVersion                = ""
+	FleetVersion                  = ""
 	HarvesterChartVersion         = ""
 	MonitoringChartVersion        = ""
 	LoggingChartVersion           = ""
@@ -319,6 +320,9 @@ func setConfigDefaultValues(config *HarvesterConfig) {
 	}
 	if config.RancherVersion == "" {
 		config.RancherVersion = RancherVersion
+	}
+	if config.FleetVersion == "" {
+		config.FleetVersion = FleetVersion
 	}
 	if config.HarvesterChartVersion == "" {
 		config.HarvesterChartVersion = HarvesterChartVersion

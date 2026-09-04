@@ -252,9 +252,11 @@ resources:
         containers:
         - name: harvester-crd-fleet
           image: rancher/fleet:{{ .FleetVersion }}
-          command:
-          - |
-            fleet apply harvester-crd /app
+          command: ["fleet"]
+          args:
+          - "apply"
+          - "harvester-crd"
+          - "/app"
           volumeMounts:
           - name: config-volume
             mountPath: "/app/fleet.yaml"
@@ -278,9 +280,11 @@ resources:
         containers:
         - name: harvester-fleet
           image: rancher/fleet:{{ .FleetVersion }}
-          command:
-          - |
-            fleet apply harvester /app
+          command: ["fleet"]
+          args:
+          - "apply"
+          - "harvester"
+          - "/app"
           volumeMounts:
           - name: config-volume
             mountPath: "/app/fleet.yaml"

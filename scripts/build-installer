@@ -30,6 +30,7 @@ echo "The ARCH is: ${ARCH}"
 mkdir -p bin
 
 LINKFLAGS="-X github.com/harvester/harvester/pkg/installer/config.RKE2Version=$RKE2_VERSION
+           -X github.com/harvester/harvester/pkg/installer/config.FleetVersion=$FLEET_VERSION
            -X github.com/harvester/harvester/pkg/installer/version.Version=$VERSION
            -X github.com/harvester/harvester/pkg/installer/version.GitCommit=$COMMIT
            -X github.com/harvester/harvester/pkg/installer/version.HarvesterVersion=$VERSION
