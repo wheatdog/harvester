@@ -4,7 +4,6 @@ import (
 	"context"
 
 	ctlfleetv1 "github.com/rancher/rancher/pkg/generated/controllers/fleet.cattle.io"
-	rancherv3 "github.com/rancher/rancher/pkg/generated/controllers/management.cattle.io"
 	"github.com/rancher/wrangler/v3/pkg/clients"
 	ctlappsv1 "github.com/rancher/wrangler/v3/pkg/generated/controllers/apps"
 	ctrlcorev1 "github.com/rancher/wrangler/v3/pkg/generated/controllers/core"
@@ -29,22 +28,21 @@ import (
 type Clients struct {
 	clients.Clients
 
-	HarvesterFactory         *ctlharvesterv1.Factory
-	HarvesterCoreFactory     *ctlharvestercorev1.Factory
-	KubevirtFactory          *ctlkubevirtv1.Factory
-	CNIFactory               *ctlcniv1.Factory
-	SnapshotFactory          *ctlsnapshotv1.Factory
-	FleetFactory             *ctlfleetv1.Factory
-	StorageFactory           *storagev1.Factory
-	LonghornFactory          *ctllonghornv1.Factory
-	ClusterFactory           *ctlclusterv1.Factory
-	RancherManagementFactory *rancherv3.Factory
-	CoreFactory              *ctrlcorev1.Factory
-	DiscoveryFactory         *ctldiscoveryv1.Factory
-	HarvesterNetworkFactory  *ctlnetwork.Factory
-	LoggingFactory           *ctlloggingv1.Factory
-	AppsFactory              *ctlappsv1.Factory
-	KubeovnFactory           *ctlkubeovnv1.Factory
+	HarvesterFactory        *ctlharvesterv1.Factory
+	HarvesterCoreFactory    *ctlharvestercorev1.Factory
+	KubevirtFactory         *ctlkubevirtv1.Factory
+	CNIFactory              *ctlcniv1.Factory
+	SnapshotFactory         *ctlsnapshotv1.Factory
+	FleetFactory            *ctlfleetv1.Factory
+	StorageFactory          *storagev1.Factory
+	LonghornFactory         *ctllonghornv1.Factory
+	ClusterFactory          *ctlclusterv1.Factory
+	CoreFactory             *ctrlcorev1.Factory
+	DiscoveryFactory        *ctldiscoveryv1.Factory
+	HarvesterNetworkFactory *ctlnetwork.Factory
+	LoggingFactory          *ctlloggingv1.Factory
+	AppsFactory             *ctlappsv1.Factory
+	KubeovnFactory          *ctlkubeovnv1.Factory
 }
 
 func New(ctx context.Context, rest *rest.Config, threadiness int, crdExists bool) (*Clients, error) {
@@ -130,11 +128,6 @@ func New(ctx context.Context, rest *rest.Config, threadiness int, crdExists bool
 		return nil, err
 	}
 
-	rancherFactory, err := rancherv3.NewFactoryFromConfigWithOptions(rest, clients.FactoryOptions)
-	if err != nil {
-		return nil, err
-	}
-
 	coreFactory, err := ctrlcorev1.NewFactoryFromConfigWithOptions(rest, clients.FactoryOptions)
 	if err != nil {
 		return nil, err
@@ -182,22 +175,21 @@ func New(ctx context.Context, rest *rest.Config, threadiness int, crdExists bool
 	}
 
 	return &Clients{
-		Clients:                  *clients,
-		HarvesterFactory:         harvesterFactory,
-		HarvesterCoreFactory:     harvesterCoreFactory,
-		KubevirtFactory:          kubevirtFactory,
-		CNIFactory:               cniFactory,
-		SnapshotFactory:          snapshotFactory,
-		FleetFactory:             fleetFactory,
-		StorageFactory:           storageFactory,
-		LonghornFactory:          longhornFactory,
-		ClusterFactory:           clusterFactory,
-		RancherManagementFactory: rancherFactory,
-		CoreFactory:              coreFactory,
-		DiscoveryFactory:         discoveryFactory,
-		HarvesterNetworkFactory:  harvesterNetworkFactory,
-		LoggingFactory:           loggingFactory,
-		AppsFactory:              appsFactory,
-		KubeovnFactory:           kubeovnFactory,
+		Clients:                 *clients,
+		HarvesterFactory:        harvesterFactory,
+		HarvesterCoreFactory:    harvesterCoreFactory,
+		KubevirtFactory:         kubevirtFactory,
+		CNIFactory:              cniFactory,
+		SnapshotFactory:         snapshotFactory,
+		FleetFactory:            fleetFactory,
+		StorageFactory:          storageFactory,
+		LonghornFactory:         longhornFactory,
+		ClusterFactory:          clusterFactory,
+		CoreFactory:             coreFactory,
+		DiscoveryFactory:        discoveryFactory,
+		HarvesterNetworkFactory: harvesterNetworkFactory,
+		LoggingFactory:          loggingFactory,
+		AppsFactory:             appsFactory,
+		KubeovnFactory:          kubeovnFactory,
 	}, nil
 }
