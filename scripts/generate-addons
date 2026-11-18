@@ -1,0 +1,25 @@
+#!/bin/bash
+# Validate and render the in-tree addons/ directory. Runs in the generate-addons
+# Docker stage and writes the per-addon manifests and the rancherd bootstrap
+# template to /dist/prepare-addons.
+set -eu
+
+TOP_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )"
+SCRIPTS_DIR="${TOP_DIR}/scripts"
+DIST_ADDONS_DIR="/dist/prepare-addons"
+
+cd "${TOP_DIR}"
+
+source "${SCRIPTS_DIR}/version"
+source "${SCRIPTS_DIR}/lib/addon"
+
+"${SCRIPTS_DIR}/prepare-addons-prime" "${TOP_DIR}/addons/version_info"
+
+mkdir -p "${DIST_ADDONS_DIR}/addons-manifests" "${DIST_ADDONS_DIR}/addons-templates"
+go run ./cmd/addon-generator -validate
+go run ./cmd/addon-generator -generateAddons -path "${DIST_ADDONS_DIR}/addons-manifests"
+go run ./cmd/addon-generator -generateTemplates -path "${DIST_ADDONS_DIR}/addons-templates"
+
+# sprint releases: pin the nvidia-driver-toolkit tag in the generated manifests,
+# which are shipped in both the upgrade image and the ISO
+freeze_sprint_image_tags "${DIST_ADDONS_DIR}/addons-manifests"

@@ -110,11 +110,7 @@ ENV MONITORING_PRIME_REGISTRY=${MONITORING_PRIME_REGISTRY}
 
 RUN --mount=type=cache,target=/go/pkg/mod,id=harvester-go-mod-${MK_REPO_ID} \
     --mount=type=cache,target=/go/src/github.com/harvester/harvester/.cache/go-build,id=harvester-go-build-${MK_REPO_ID} \
-    ./scripts/prepare-addons-prime ./addons/version_info && \
-    mkdir -p /dist/prepare-addons/addons-manifests /dist/prepare-addons/addons-templates && \
-    go run ./cmd/addon-generator -validate && \
-    go run ./cmd/addon-generator -generateAddons -path /dist/prepare-addons/addons-manifests && \
-    go run ./cmd/addon-generator -generateTemplates -path /dist/prepare-addons/addons-templates
+    ./scripts/generate-addons
 
 FROM scratch AS generate-addons-output
 COPY --from=generate-addons /dist/prepare-addons/ /prepare-addons/
@@ -314,6 +310,10 @@ COPY scripts/ scripts/
 COPY package/upgrade-matrix.yaml package/upgrade-matrix.yaml
 COPY package/harvester-os/ package/harvester-os/
 COPY package/harvester-repo/ package/harvester-repo/
+
+# Rendered built-in addon manifests, shipped at /addons/ in the ISO so
+# upgrade-toolkit reads the target release's manifests from the upgrade repo.
+COPY --from=generate-addons /dist/prepare-addons/addons-manifests/ package/harvester-os/iso/addons/
 
 # rancherDependencies fragment resolved over HTTP in the collect-rancher-deps stage;
 # merged into harvester-release.yaml by scripts/package-harvester-os.

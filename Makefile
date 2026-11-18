@@ -261,9 +261,9 @@ generate:
 
 
 # ---- Generate addon manifests from the in-tree addons directory ---
-prepare-addons: validate-prime-registries
+prepare-addons: validate-prime-registries gen-version-env
 	$(BANNER)
-	$(ROOT)/scripts/prepare-addons
+	$(ROOT)/scripts/mk-generate-addons
 
 
 # ---- Generate and output the (patched) charts to /dist/patched-charts for local usage ---

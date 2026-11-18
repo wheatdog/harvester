@@ -23,7 +23,7 @@ deprecated: true | false   # optional, defaults to false
 ```
 
 - `stage` reflects maturity/support commitment and is independent of the addon delivery category.
-- Addons under `built-in/` carry `addon-template.yaml`, a fragment of the rancherd bootstrap template assembled at build time.
+- Addons under `built-in/` carry `addon-template.yaml`, a fragment of the rancherd bootstrap template assembled at build time. Their rendered manifests are also shipped in the ISO under `/addons/<name>.yaml`, where upgrade-toolkit reads them from the upgrade repo during an upgrade.
 - Addons under `standalone/` carry `addon.yaml` and are installed after Harvester installation rather than being bundled in the ISO; install with:
   ```
   kubectl apply -f https://raw.githubusercontent.com/harvester/harvester/<version>/addons/standalone/<name>/addon.yaml

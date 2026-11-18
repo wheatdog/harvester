@@ -19,5 +19,6 @@ scripts/.version_env
 # port from installer
 .vagrant
 /package/harvester-os/iso/boot/grub2/harvester.cfg
+/package/harvester-os/iso/addons/
 /package/harvester-os/harvester-release.yaml
 /.backup

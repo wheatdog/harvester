@@ -8,3 +8,5 @@
 /Makefile
 .git/
 .github/
+# generated at build time (see the build-iso stage)
+/package/harvester-os/iso/addons/
